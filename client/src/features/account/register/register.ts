@@ -1,6 +1,5 @@
 import { Component, inject, output, signal } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
-import { RegisterCreds } from '../../../types/user';
 import { AccountService } from '../../../core/services/account-service';
 import { TextInput } from "../../../shared/text-input/text-input";
 import { Router } from '@angular/router';
@@ -16,7 +15,7 @@ export class Register {
   private router = inject(Router);
   private fb = inject(FormBuilder);
   cancelRegister = output<boolean>();
-  protected creds = {} as RegisterCreds;
+    
   protected credentialsForm: FormGroup;
   protected profileForm: FormGroup;
   protected currentStep = signal(1);
