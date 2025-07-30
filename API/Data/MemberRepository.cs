@@ -3,7 +3,7 @@ using API.Helpers;
 using API.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
-namespace API.Data.Migrations;
+namespace API.Data;
 
 public class MemberRepository(AppDbContext context) : IMemberRepository
 {
