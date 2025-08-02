@@ -23,7 +23,7 @@ namespace API.Controllers
         }
 
         [HttpGet("{id}")] // localhost:5001/api/members/bob-id
-        public async Task<ActionResult<Member>> GetMember(string id)
+        public async Task<ActionResult<Member?>> GetMember(string id)
         {
             var member = await memberRepository.GetMemberByIdAsync(id);
 

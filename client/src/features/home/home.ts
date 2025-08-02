@@ -8,7 +8,7 @@ import { Register } from "../account/register/register";
   styleUrl: './home.css'
 })
 export class Home {
-  protected registerMode = signal(false);
+  protected registerMode = signal(false); //Toggle true or false to update Register Form
 
   showRegister(value: boolean) {
     this.registerMode.set(value);
