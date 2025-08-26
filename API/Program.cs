@@ -44,7 +44,7 @@ var app = builder.Build();
 // Configure the HTTP request pipeline. For middlewares and ordering is important
 app.UseMiddleware<ExceptionMiddleware>();
 app.UseCors(x => x.AllowAnyHeader().AllowAnyMethod()
-.WithOrigins("http://localhost:4200", "https://localhost:4200", "https://so-datingapp-client-08b7ca7ec410.herokuapp.com/"));
+.WithOrigins("http://localhost:4200", "https://localhost:4200", "https://so-datingapp-6a6dc3e24da5.herokuapp.com"));
 
 app.UseAuthentication();
 app.UseAuthorization();
