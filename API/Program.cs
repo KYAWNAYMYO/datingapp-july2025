@@ -56,8 +56,8 @@ var services = scope.ServiceProvider;
 try
 {
     var context = services.GetRequiredService<AppDbContext>(); //Can access the database now.
-    //await context.Database.MigrateAsync();
-    context.Database.Migrate(); // Or context.Database.EnsureCreated();
+    await context.Database.MigrateAsync();
+    //context.Database.Migrate(); // Or context.Database.EnsureCreated();
     await Seed.SeedUsers(context);
 }
 catch (Exception ex)
