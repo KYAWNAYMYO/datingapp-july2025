@@ -12,13 +12,15 @@ using Microsoft.IdentityModel.Tokens;
 
 var builder = WebApplication.CreateBuilder(args);
 
-var isHeroku = !string.IsNullOrEmpty(builder.Configuration.GetConnectionString("DYNO"));
-Console.WriteLine("isHeroku: ", isHeroku);
+var isHeroku = !string.IsNullOrEmpty(builder.Configuration["DYNO"]);
+Console.WriteLine("DYNO: " + builder.Configuration["DYNO"]);
+Console.WriteLine("isHeroku: " + isHeroku);
 builder.Services.Configure<ForwardedHeadersOptions>(options =>
 {
     options.ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
     if (isHeroku)
-    {
+    {        
+        Console.WriteLine("If isHeroku true: " + isHeroku);
         options.KnownNetworks.Clear();
         options.KnownProxies.Clear();
     }
@@ -51,6 +53,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     {
         var tokenKey = builder.Configuration["TokenKey"] ??
         throw new Exception("Tokey key not found - Program.cs");
+        Console.WriteLine("tokenKey: " + tokenKey);
         options.TokenValidationParameters = new TokenValidationParameters
         {
             ValidateIssuerSigningKey = true,
