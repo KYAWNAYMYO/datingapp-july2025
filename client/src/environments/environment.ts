@@ -1,4 +1,4 @@
 export const environment = {
     production: true,
-    apiUrl: 'api/'
+    apiUrl: 'https://so-datingapp-6a6dc3e24da5.herokuapp.com/api/'
 };
