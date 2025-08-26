@@ -12,28 +12,6 @@ using Microsoft.IdentityModel.Tokens;
 
 var builder = WebApplication.CreateBuilder(args);
 
-var isHeroku = !string.IsNullOrEmpty(builder.Configuration["DYNO"]);
-Console.WriteLine("DYNO: " + builder.Configuration["DYNO"]);
-Console.WriteLine("isHeroku: " + isHeroku);
-builder.Services.Configure<ForwardedHeadersOptions>(options =>
-{
-    options.ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
-    if (isHeroku)
-    {        
-        Console.WriteLine("If isHeroku true: " + isHeroku);
-        options.KnownNetworks.Clear();
-        options.KnownProxies.Clear();
-    }
-});
-builder.Services.AddHttpsRedirection(options =>
-{
-    if (isHeroku)
-    {
-        options.RedirectStatusCode = StatusCodes.Status308PermanentRedirect;
-        options.HttpsPort = 443;
-    };
-});
-
 // Add services to the container.
 builder.Services.AddControllers();
 builder.Services.AddDbContext<AppDbContext>(opt =>
@@ -53,7 +31,6 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     {
         var tokenKey = builder.Configuration["TokenKey"] ??
         throw new Exception("Tokey key not found - Program.cs");
-        Console.WriteLine("tokenKey: " + tokenKey);
         options.TokenValidationParameters = new TokenValidationParameters
         {
             ValidateIssuerSigningKey = true,
@@ -64,20 +41,6 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     });
 
 var app = builder.Build();
-
-app.UseForwardedHeaders();
-
-if (!app.Environment.IsDevelopment())
-{
-    app.UseHsts();
-}
-
-app.UseHttpsRedirection();
-app.UseStaticFiles();
-
-app.MapGet("/", () => "Hello from Heroku!");
-
-app.UseRouting();
 
 // Configure the HTTP request pipeline. For middlewares and ordering is important
 app.UseMiddleware<ExceptionMiddleware>();
