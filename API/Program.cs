@@ -12,7 +12,7 @@ using Microsoft.IdentityModel.Tokens;
 
 var builder = WebApplication.CreateBuilder(args);
 
-var isHeroku = !string.IsNullOrEmpty(Environment.GetEnvironmentVariable("DYNO"));
+var isHeroku = !string.IsNullOrEmpty(builder.Configuration.GetConnectionString("DYNO"));
 Console.WriteLine("isHeroku: ", isHeroku);
 builder.Services.Configure<ForwardedHeadersOptions>(options =>
 {
