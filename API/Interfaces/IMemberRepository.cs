@@ -9,7 +9,7 @@ public interface IMemberRepository
 
     Task<bool> SaveAllAsync();
 
-    Task<PaginatedResult<Member>> GetMembersAsynce(MemberParams memberParams);
+    Task<PaginatedResult<Member>> GetMembersAsync(MemberParams memberParams);
 
     Task<Member?> GetMemberByIdAsync(string id);
 

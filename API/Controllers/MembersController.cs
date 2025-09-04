@@ -19,7 +19,7 @@ namespace API.Controllers
             [FromQuery] MemberParams memberParams)
         {
             memberParams.CurrentMemberId = User.GetMemberId();
-            return Ok(await memberRepository.GetMembersAsynce(memberParams));
+            return Ok(await memberRepository.GetMembersAsync(memberParams));
         }
 
         [HttpGet("{id}")] // localhost:5001/api/members/bob-id
