@@ -52,7 +52,7 @@ export class AccountService {
             this.logout()
           }
         })
-    }, 10 * 1000) // 10 * 1000 (10 second interval) 5 * 60 * 1000 (5 mins interval)
+    }, 5 * 60 * 1000) // 10 * 1000 (10 second interval) 5 * 60 * 1000 (5 mins interval)
   }
 
   setCurrentUser(user: User) {
