@@ -29,6 +29,7 @@
     "@angular/forms": "^20.1.0",
     "@angular/platform-browser": "^20.1.0",
     "@angular/router": "^20.1.0",
+    "@microsoft/signalr": "^10.0.0",
     "@tailwindcss/postcss": "^4.1.11",
     "express": "^5.1.0",
     "path": "^0.12.7",

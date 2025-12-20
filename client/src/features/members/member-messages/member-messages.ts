@@ -1,10 +1,11 @@
-import { Component, effect, ElementRef, inject, OnInit, signal, ViewChild } from '@angular/core';
+import { Component, effect, ElementRef, inject, model, OnDestroy, OnInit, signal, ViewChild } from '@angular/core';
 import { MessageService } from '../../../core/services/message-service';
 import { MemberService } from '../../../core/services/member-service';
-import { Message } from '../../../types/message';
 import { DatePipe } from '@angular/common';
 import { TimeAgoPipe } from '../../../core/pipes/time-ago-pipe';
 import { FormsModule } from '@angular/forms';
+import { PresenceService } from '../../../core/services/presence-service';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-member-messages',
@@ -12,16 +13,17 @@ import { FormsModule } from '@angular/forms';
   templateUrl: './member-messages.html',
   styleUrl: './member-messages.css'
 })
-export class MemberMessages implements OnInit {
+export class MemberMessages implements OnInit, OnDestroy {
   @ViewChild('messageEndRef') messageEndRef!: ElementRef
-  private messageService = inject(MessageService);
+  protected messageService = inject(MessageService);
   private memberService = inject(MemberService);
-  protected messages = signal<Message[]>([]);
-  protected messageContent = '';
+  protected presenceService = inject(PresenceService);
+  private route = inject(ActivatedRoute);
+  protected messageContent = model('');
 
   constructor() {
     effect(() => {
-      const currentMessages = this.messages();
+      const currentMessages =  this.messageService.messageThread();
       if(currentMessages.length > 0) {
         this.scrollToBottom();
       }
@@ -29,10 +31,16 @@ export class MemberMessages implements OnInit {
   }
 
   ngOnInit(): void {
-    this.loadMessages();
+    this.route.parent?.paramMap.subscribe({
+      next: params => {
+        const otherUserId = params.get('id');
+        if (!otherUserId) throw new Error ('Cannot connect to hub.');
+        this.messageService.createHubConnection(otherUserId);
+      }
+    })    
   }  
 
-  loadMessages() {
+/*   loadMessages() {
     const memberId = this.memberService.member()?.id;
     if(memberId) {
       this.messageService.getMessageThread(memberId).subscribe({
@@ -42,19 +50,13 @@ export class MemberMessages implements OnInit {
         })))
       })
     }
-  }
+  } */
 
   sendMessage() {
     const recipientId = this.memberService.member()?.id;
-    if(!recipientId) return;
-    this.messageService.sendMessage(recipientId, this.messageContent).subscribe({
-      next: message => {
-        this.messages.update(messages => {
-          message.currentUserSender = true;
-          return [...messages, message]
-        });
-        this.messageContent = '';
-      } 
+    if(!recipientId || !this.messageContent()) return;
+    this.messageService.sendMessage(recipientId, this.messageContent())?.then(() => {
+      this.messageContent.set('');
     })
   }
 
@@ -64,5 +66,9 @@ export class MemberMessages implements OnInit {
         this.messageEndRef.nativeElement.scrollIntoView({behavior:'smooth'})
       }
     })  
+  }
+
+  ngOnDestroy(): void {
+      this.messageService.stopHubConnection();
   }
 }
