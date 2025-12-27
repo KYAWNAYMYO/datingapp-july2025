@@ -7,7 +7,7 @@ public interface IMemberRepository
 {
     void Update(Member member);
 
-    Task<bool> SaveAllAsync();
+    //Task<bool> SaveAllAsync();
 
     Task<PaginatedResult<Member>> GetMembersAsync(MemberParams memberParams);
 

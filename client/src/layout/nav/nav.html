@@ -54,7 +54,7 @@
                     <img [src]="user?.imageUrl || '/user.png'" alt="user avatar" class="w-10 h-10 rounded-full">
                     <span>{{user.displayName}}</span>
                 </div>
-                <ul tabindex="0" class="dropdown-content menu bg-base-100 rounded-box z-1 w-52 p-2 shadow-sm">
+                <ul (click)="handleSelectedUserItem()" tabindex="0" class="dropdown-content menu bg-base-100 rounded-box z-1 w-52 p-2 shadow-sm">
                     <li><a routerLink="/members/{{user.id}}">Edit Profile</a></li>
                     <li><a (click)="logout()">Logout</a></li>
                 </ul>
@@ -64,7 +64,12 @@
                 <input [(ngModel)]="creds.Email" name="email" type="text" class="input" placeholder="Email">
                 <input [(ngModel)]="creds.Password" name="password" type="password" class="input"
                     placeholder="Password">
-                <button type="submit" class="bth btn-neutral">Login</button>
+                <button type="submit" 
+                    class="bth btn-primary">
+                    @if (loading()) {
+                        <span class="mr-2 loading loading-spinner"></span>
+                    }
+                Login</button>
             </form>
             }
         </div>
