@@ -20,7 +20,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 builder.Services.AddDbContext<AppDbContext>(opt =>
 {
-    opt.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection"));
+    opt.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
 builder.Services.AddCors();
 builder.Services.AddScoped<ITokenService, TokenService>(); // use for Services
@@ -82,14 +82,19 @@ var app = builder.Build();
 app.UseMiddleware<ExceptionMiddleware>();
 app.UseCors(x => x.AllowAnyHeader().AllowAnyMethod()
 .AllowCredentials()
-.WithOrigins("http://localhost:4200", "https://localhost:4200", "https://so-datingapp-client-5c1a30f01826.herokuapp.com"));
+.WithOrigins("http://localhost:4200", "https://localhost:4200"));
 
 app.UseAuthentication();
 app.UseAuthorization();
 
+//To use static files from angular.json "outputPath": "../API/wwwroot",
+app.UseDefaultFiles();
+app.UseStaticFiles();
+
 app.MapControllers();
 app.MapHub<PresenceHub>("hubs/presence");
 app.MapHub<MessageHub>("hubs/messages");
+app.MapFallbackToController("index","Fallback");
 
 using var scope = app.Services.CreateScope(); //Using Servce located pattern to run and use AppDbContext without injection.
 var services = scope.ServiceProvider;
